@@ -22,7 +22,7 @@ This API works with the same concept of social network of [Fav Quote](https://gi
 This is a simple REST Web Service which allow:
 
   * Post short text messages of no more than 120 characters
-  * Bring a list with the latest published messages, sorted by date, bringing the latter first
+  * Bring a list with the latest published messages
   * Search for messages by your text
   * Delete a specific message by its id
 
@@ -85,7 +85,53 @@ CREATE TABLE IF NOT EXISTS `NETWORK`.`QUOTES` (
 ENGINE = InnoDB;
 ```
 
-#### Create a project
+#### Create a Slim project
+
+  1. Go to htdocs dir
+
+Windows
+
+```bash
+$ cd /d C:\xampp\htdocs
+```
+
+Linux
+
+```bash
+$ cd /opt/lampp/htdocs
+```
+
+MAC
+
+```bash
+$ cd applications/mamp/htdocs
+```
+
+  2. Creates a new folder
+
+```bash
+$ mkdir rest
+```
+
+  3. Go to new folder
+  
+```bash
+$ cd rest
+```
+
+  4. Install Slim Framework 3
+
+```bash
+$ composer require slim/slim "^3.0"  
+```
+
+  5. Install JWT Authentication Middleware
+
+```bash
+$ composer require tuupola/slim-jwt-auth
+```
+
+#### Copy this project
 
   1. Clone or Download this repository
   2. Unzip the archive if needed
@@ -104,10 +150,17 @@ ENGINE = InnoDB;
 
 Use RestEasy or Postman app for testing.
 
+For authentication you can use a default value of JSON Web Token or generate a
+ new JSON Web Token with the url login.
+
+Put the token on an HTTP header called Authorization. e.g.:
+
+  * Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+
 <a name="changelog"></a>
 ## :information_source: Changelog
 
-**1.0.0.1** (12/06/2017)
+**1.0.0.1** (12/07/2017)
 
   * <table border="0" cellpadding="4">
 		<tr>
@@ -143,7 +196,7 @@ Use RestEasy or Postman app for testing.
 			<td>
 				<ul>
 					<li>
-						Add Authentication with [PSR-7 JWT Authentication Middleware](https://github.com/tuupola/slim-jwt-auth)
+						Add Authentication with <a href="https://github.com/tuupola/slim-jwt-auth">PSR-7 JWT Authentication Middleware</a>
 					</li>
 				</ul>
 			</td>
