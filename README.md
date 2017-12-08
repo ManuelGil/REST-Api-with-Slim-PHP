@@ -89,47 +89,47 @@ ENGINE = InnoDB;
 
   1. Go to htdocs dir
 
-    * Windows
+  * Windows
 
-    ```bash
-    $ cd /d C:\xampp\htdocs
-    ```
+```bash
+$ cd /d C:\xampp\htdocs
+```
 
-    * Linux
+  * Linux
 
-    ```bash
-    $ cd /opt/lampp/htdocs
-    ```
+```bash
+$ cd /opt/lampp/htdocs
+```
 
-    * MAC
+  * MAC
 
-    ```bash
-    $ cd applications/mamp/htdocs
-    ```
+```bash
+$ cd applications/mamp/htdocs
+```
 
   2. Creates a new folder
 
-    ```bash
-    $ mkdir rest
-    ```
+```bash
+$ mkdir rest
+```
 
   3. Go to new folder
   
-    ```bash
-    $ cd rest
-    ```
+```bash
+$ cd rest
+```
 
   4. Install Slim Framework 3
 
-    ```bash
-    $ composer require slim/slim "^3.0"  
-    ```
+```bash
+$ composer require slim/slim "^3.0"  
+```
 
   5. Install JWT Authentication Middleware
 
-    ```bash
-    $ composer require tuupola/slim-jwt-auth
-    ```
+```bash
+$ composer require tuupola/slim-jwt-auth
+```
 
 #### Copy this project
 
@@ -158,13 +158,13 @@ Put the token on an HTTP header called Authorization. e.g.:
   * Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 
 <div align="center">
-	<img src="https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/docs/screenshots/header.png?raw=true" alt="Header">
+	<img src="https://raw.githubusercontent.com/ManuelGil/REST-Api-with-Slim-PHP/master/docs/screenshots/header.png" alt="Header">
 </div>
 
 Put the parameters on a Query Parameter.
 
 <div align="center">
-	<img src="https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/docs/screenshots/test.png?raw=true" alt="Test">
+	<img src="https://raw.githubusercontent.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/docs/screenshots/test.png" alt="Test">
 </div>
 
 <a name="changelog"></a>
