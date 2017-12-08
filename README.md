@@ -158,13 +158,13 @@ Put the token on an HTTP header called Authorization. e.g.:
   * Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 
 <div align="center">
-	<img src="https://raw.githubusercontent.com/ManuelGil/REST-Api-with-Slim-PHP/master/docs/screenshots/header.png" alt="Header">
+	<img src="https://mfgil.files.wordpress.com/2017/12/header.png" alt="Header">
 </div>
 
 Put the parameters on a Query Parameter.
 
 <div align="center">
-	<img src="https://raw.githubusercontent.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/docs/screenshots/test.png" alt="Test">
+	<img src="https://mfgil.files.wordpress.com/2017/12/test.png" alt="Test">
 </div>
 
 <a name="changelog"></a>
