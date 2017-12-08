@@ -89,47 +89,47 @@ ENGINE = InnoDB;
 
   1. Go to htdocs dir
 
-Windows
+    * Windows
 
-```bash
-$ cd /d C:\xampp\htdocs
-```
+    ```bash
+    $ cd /d C:\xampp\htdocs
+    ```
 
-Linux
+    * Linux
 
-```bash
-$ cd /opt/lampp/htdocs
-```
+    ```bash
+    $ cd /opt/lampp/htdocs
+    ```
 
-MAC
+    * MAC
 
-```bash
-$ cd applications/mamp/htdocs
-```
+    ```bash
+    $ cd applications/mamp/htdocs
+    ```
 
   2. Creates a new folder
 
-```bash
-$ mkdir rest
-```
+    ```bash
+    $ mkdir rest
+    ```
 
   3. Go to new folder
   
-```bash
-$ cd rest
-```
+    ```bash
+    $ cd rest
+    ```
 
   4. Install Slim Framework 3
 
-```bash
-$ composer require slim/slim "^3.0"  
-```
+    ```bash
+    $ composer require slim/slim "^3.0"  
+    ```
 
   5. Install JWT Authentication Middleware
 
-```bash
-$ composer require tuupola/slim-jwt-auth
-```
+    ```bash
+    $ composer require tuupola/slim-jwt-auth
+    ```
 
 #### Copy this project
 
@@ -144,18 +144,28 @@ $ composer require tuupola/slim-jwt-auth
 
   * XAMPP ([XAMPP for Windows 5.6.32](https://www.apachefriends.org/download.html))
   * ATOM ([ATOM](https://atom.io/))
+  * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
 
 <a name="test"></a>
 ## :100: Running the tests
 
 Use RestEasy or Postman app for testing.
 
-For authentication you can use a default value of JSON Web Token or generate a
- new JSON Web Token with the url login.
+For authentication you can generate a new JSON Web Token with the url login.
 
 Put the token on an HTTP header called Authorization. e.g.:
 
   * Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+
+<div align="center">
+	<img src="https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/docs/screenshots/header.png?raw=true" alt="Header">
+</div>
+
+Put the parameters on a Query Parameter.
+
+<div align="center">
+	<img src="https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/docs/screenshots/test.png?raw=true" alt="Test">
+</div>
 
 <a name="changelog"></a>
 ## :information_source: Changelog

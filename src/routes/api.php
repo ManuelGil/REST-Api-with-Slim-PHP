@@ -76,6 +76,22 @@
     });
 
     /**
+     * This method cheks the token.
+     */
+    $app->get('/verify', function (Request $request, Response $response) {
+      // Gets the token of the header.
+      $token = str_replace('Bearer ', '', $request->getServerParams()['HTTP_AUTHORIZATION']);
+      // Verify the token.
+      $result = JWTAuth::verifyToken($token);
+      // Return the result
+      $data['status'] = $result;
+      $response = $response->withHeader('Content-Type','application/json');
+      $response = $response->withStatus(200);
+      $response = $response->withJson($data);
+      return $response;
+    });
+
+    /**
      * This method publish short text messages of no more than 120 characters
      * @param String $quote - The text of post
      * @param Int $id - The user id

@@ -15,7 +15,7 @@
      * @param String $user - username
      * @return String JWT - valid token.
      */
-    private static function getToken($id, $user) {
+    public static function getToken($id, $user) {
       $secret = SECRET;
 
       // date: now
@@ -39,15 +39,29 @@
     }
 
     /**
-     * This method decode a token.
-     * @param String $token - valid token.
-     * @return Object token.
+     * This method verify a token.
+     * @param String $token - token.
+     * @return Boolean valid token.
      */
-    function verifyToken($token) {
+    public static function verifyToken($token) {
       $secret = SECRET;
 
       // Decode Jwt Authentication Token
-      return JWT::decode($token, $secret, array("HS256"));
+      $obj = JWT::decode($token, $secret, array("HS256"));
+
+      // If payload is defined
+      if (isset($obj->payload)) {
+        // Gets the actual date
+        $now = strtotime(date('Y-m-d H:i:s'));
+        // Gets the expiration date
+        $exp = strtotime($obj->payload->exp);
+        // If token didn't expire
+        if (($exp - $now) > 0) {
+          return true;
+        }
+      }
+
+      return false;
     }
   }
 
