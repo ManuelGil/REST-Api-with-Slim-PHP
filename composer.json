@@ -1,0 +1,17 @@
+{
+    "name": "manuelgil/rest-api-with-slim-php",
+    "description": "REST API with PHP Slim Framework 3 and MySQL",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Manuel Gil",
+            "email": "atencion.ms@outlook.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.9",
+        "monolog/monolog": "^1.23",
+        "tuupola/slim-jwt-auth": "^2.3"
+    }
+}

@@ -11,9 +11,9 @@
 
     /**
      * This method create a valid token.
-     * @param Int $id - user id
-     * @param String $user - username
-     * @return String JWT - valid token.
+     * @param int $id - user id
+     * @param string $user - username
+     * @return string JWT - valid token.
      */
     public static function getToken($id, $user) {
       $secret = SECRET;
@@ -40,8 +40,8 @@
 
     /**
      * This method verify a token.
-     * @param String $token - token.
-     * @return Boolean valid token.
+     * @param string $token - token.
+     * @return boolean valid token.
      */
     public static function verifyToken($token) {
       $secret = SECRET;

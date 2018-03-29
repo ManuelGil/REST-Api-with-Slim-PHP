@@ -9,19 +9,19 @@
 
     /**
      * This function create a database connection
-     * @return Object database connection
+     * @return object database connection
      */
     public static function getConnection() {
-      /** @var String hostname */
+      /** @var string hostname */
       $host = DB_HOST;
-      /** @var String database username */
+      /** @var string database username */
       $user = DB_USER;
-      /** @var String database password */
+      /** @var string database password */
       $pass = DB_PASS;
-      /** @var String database name */
+      /** @var string database name */
       $name = DB_NAME;
 
-      /** @var String connection string */
+      /** @var string connection string */
       $dsn = "mysql:host=$host;dbname=$name;charset=utf8";
 
       try {
