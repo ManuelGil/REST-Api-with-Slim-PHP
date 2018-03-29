@@ -170,7 +170,7 @@ $ cd REST-Api-with-Slim-PHP
 $ composer install
 ```
 
-  Or
+    Or
 
 ```bash
 $ php composer.phar install  
@@ -191,7 +191,7 @@ $ php composer.phar install
 
   * XAMPP ([XAMPP for Windows 5.6.32](https://www.apachefriends.org/download.html))
   * ATOM ([ATOM](https://atom.io/))
-  * COMPOSSER ([COMPOSER](https://getcomposer.org/))
+  * COMPOSER ([COMPOSER](https://getcomposer.org/))
   * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
 
 <a name="test"></a>
