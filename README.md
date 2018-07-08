@@ -7,10 +7,10 @@
 		<img src="https://img.shields.io/badge/stability-stable-green.svg" alt="Status">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/release-v1.0.0.2-blue.svg" alt="Version">
+		<img src="https://img.shields.io/badge/release-v1.0.0.3-blue.svg" alt="Version">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/update-march-yellowgreen.svg" alt="Update">
+		<img src="https://img.shields.io/badge/update-july-yellowgreen.svg" alt="Update">
 	</a>
 	<a href="#license">
 		<img src="https://img.shields.io/badge/license-MIT%20License-green.svg" alt="License">
@@ -40,93 +40,6 @@ This page will help you get started with this API.
 
 <a name="installation"></a>
 ### Installation
-
-#### Create a database
-
-Run the following SQL script
-
-```SQL
--- -----------------------------------------------------
--- Schema NETWORK
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `NETWORK` DEFAULT CHARACTER SET utf8 ;
-USE `NETWORK` ;
-
--- -----------------------------------------------------
--- Table `NETWORK`.`COUNTRIES`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `NETWORK`.`COUNTRIES` (
-  `ID_COUNTRY` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `ISO` VARCHAR(2) NOT NULL,
-  `COUNTRY` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`ID_COUNTRY`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `NETWORK`.`USERS`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `NETWORK`.`USERS` (
-  `ID_USER` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `GUID` VARCHAR(20) NOT NULL,
-  `USERNAME` VARCHAR(20) NOT NULL,
-  `PASSWORD` VARCHAR(255) NOT NULL,
-  `CREATED_AT` DATE NOT NULL,
-  `ID_COUNTRY` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`ID_USER`),
-  UNIQUE INDEX `ID_USER_UNIQUE` (`ID_USER` ASC),
-  UNIQUE INDEX `USER_UNIQUE` (`USERNAME` ASC),
-  UNIQUE INDEX `GUID_UNIQUE` (`GUID` ASC),
-  INDEX `fk_USERS_COUNTRIES1_idx` (`ID_COUNTRY` ASC),
-  CONSTRAINT `fk_USERS_COUNTRIES1`
-    FOREIGN KEY (`ID_COUNTRY`)
-    REFERENCES `NETWORK`.`COUNTRIES` (`ID_COUNTRY`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `NETWORK`.`QUOTES`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `NETWORK`.`QUOTES` (
-  `ID_QUOTE` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `QUOTE` VARCHAR(120) NOT NULL,
-  `POST_DATE` DATE NOT NULL,
-  `POST_TIME` TIME NOT NULL,
-  `LIKES` INT UNSIGNED NOT NULL DEFAULT 0,
-  `ID_USER` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`ID_QUOTE`),
-  UNIQUE INDEX `ID_QUOTE_UNIQUE` (`ID_QUOTE` ASC),
-  INDEX `fk_QUOTES_USERS_idx` (`ID_USER` ASC),
-  CONSTRAINT `fk_QUOTES_USERS`
-    FOREIGN KEY (`ID_USER`)
-    REFERENCES `NETWORK`.`USERS` (`ID_USER`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `NETWORK`.`LIKES`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `NETWORK`.`LIKES` (
-  `ID_USER` INT UNSIGNED NOT NULL,
-  `ID_QUOTE` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`ID_USER`, `ID_QUOTE`),
-  INDEX `fk_LIKES_QUOTES1_idx` (`ID_QUOTE` ASC),
-  CONSTRAINT `fk_LIKES_USERS1`
-    FOREIGN KEY (`ID_USER`)
-    REFERENCES `NETWORK`.`USERS` (`ID_USER`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_LIKES_QUOTES1`
-    FOREIGN KEY (`ID_QUOTE`)
-    REFERENCES `NETWORK`.`QUOTES` (`ID_QUOTE`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-```
 
 #### Copy this project
 
@@ -176,6 +89,126 @@ $ composer install
 $ php composer.phar install  
 ```
 
+#### Create a database
+
+  Import the [NETWORK SCHEMA DDL.sql](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/install/NETWORK%20SCHEMA%20DDL.sql)
+ file.
+
+  Import the [NETWORK SCHEMA DML.sql](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/install/NETWORK%20SCHEMA%20DML.sql)
+ file.
+
+  Or run the following SQL script
+
+```SQL
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, AUTOCOMMIT=0;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+START TRANSACTION;
+
+-- -----------------------------------------------------
+-- Schema NETWORK
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `NETWORK` DEFAULT CHARACTER SET utf8 ;
+USE `NETWORK` ;
+
+-- -----------------------------------------------------
+-- Table `NETWORK`.`COUNTRIES`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NETWORK`.`COUNTRIES` (
+  `ID_COUNTRY` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ISO` VARCHAR(2) NOT NULL,
+  `COUNTRY` VARCHAR(80) NOT NULL,
+  PRIMARY KEY (`ID_COUNTRY`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Dumping data for table `NETWORK`.`COUNTRIES`
+-- -----------------------------------------------------
+INSERT INTO `NETWORK`.`COUNTRIES` (`ID_COUNTRY`, `ISO`, `COUNTRY`) VALUES
+(1, 'AF', 'Afghanistan');
+
+-- -----------------------------------------------------
+-- Table `NETWORK`.`USERS`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NETWORK`.`USERS` (
+  `ID_USER` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `GUID` VARCHAR(20) NOT NULL,
+  `USERNAME` VARCHAR(20) NOT NULL,
+  `PASSWORD` VARCHAR(255) NOT NULL,
+  `CREATED_AT` DATE NOT NULL,
+  `ID_COUNTRY` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID_USER`),
+  UNIQUE INDEX `ID_USER_UNIQUE` (`ID_USER` ASC),
+  UNIQUE INDEX `USER_UNIQUE` (`USERNAME` ASC),
+  UNIQUE INDEX `GUID_UNIQUE` (`GUID` ASC),
+  INDEX `fk_USERS_COUNTRIES1_idx` (`ID_COUNTRY` ASC),
+  CONSTRAINT `fk_USERS_COUNTRIES1`
+    FOREIGN KEY (`ID_COUNTRY`)
+    REFERENCES `NETWORK`.`COUNTRIES` (`ID_COUNTRY`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Dumping data for table `NETWORK`.`USERS`
+-- -----------------------------------------------------
+INSERT INTO `NETWORK`.`USERS` (`ID_USER`, `GUID`, `USERNAME`, `PASSWORD`, `CREATED_AT`, `ID_COUNTRY`) VALUES
+(0, '', 'ManuelGil', '', '2018-01-01', 1);
+
+-- -----------------------------------------------------
+-- Table `NETWORK`.`QUOTES`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NETWORK`.`QUOTES` (
+  `ID_QUOTE` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `QUOTE` VARCHAR(120) NOT NULL,
+  `POST_DATE` DATE NOT NULL,
+  `POST_TIME` TIME NOT NULL,
+  `LIKES` INT UNSIGNED NOT NULL DEFAULT 0,
+  `ID_USER` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID_QUOTE`),
+  UNIQUE INDEX `ID_QUOTE_UNIQUE` (`ID_QUOTE` ASC),
+  INDEX `fk_QUOTES_USERS_idx` (`ID_USER` ASC),
+  CONSTRAINT `fk_QUOTES_USERS`
+    FOREIGN KEY (`ID_USER`)
+    REFERENCES `NETWORK`.`USERS` (`ID_USER`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Dumping data for table `NETWORK`.`QUOTES`
+-- -----------------------------------------------------
+INSERT INTO `NETWORK`.`QUOTES` (`ID_QUOTE`, `QUOTE`, `POST_DATE`, `POST_TIME`, `LIKES`, `ID_USER`) VALUES
+(0, 'Fav Quote is a Micro Social Network with PHP, MySQL, Bootstrap 3 and Vue.JS 2. It don\'t use classes or a php framework.', '2018-01-01', '00:00:00', 1, 0);
+
+-- -----------------------------------------------------
+-- Table `NETWORK`.`LIKES`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NETWORK`.`LIKES` (
+  `ID_USER` INT UNSIGNED NOT NULL,
+  `ID_QUOTE` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID_USER`, `ID_QUOTE`),
+  INDEX `fk_LIKES_QUOTES1_idx` (`ID_QUOTE` ASC),
+  CONSTRAINT `fk_LIKES_USERS1`
+    FOREIGN KEY (`ID_USER`)
+    REFERENCES `NETWORK`.`USERS` (`ID_USER`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_LIKES_QUOTES1`
+    FOREIGN KEY (`ID_QUOTE`)
+    REFERENCES `NETWORK`.`QUOTES` (`ID_QUOTE`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+```
+
+#### Configure the project
+
+  Change the database configuration in the [`.env`](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/.env)
+ file.
+
 <a name="deployment"></a>
 ## :package: Deployment
 
@@ -203,7 +236,7 @@ For authentication you can generate a new JSON Web Token with the url login.
 
 Put the token on an HTTP header called Authorization. e.g.:
 
-  * Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+  * Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJoZWFkZXIiOnsiaWQiOiIwIiwidXNlciI6Ik1hbnVlbEdpbCJ9LCJwYXlsb2FkIjp7ImlhdCI6IjIwMTktMDEtMDEgMDA6MDA6MDAiLCJleHAiOiIyMDIwLTAxLTAxIDAwOjAwOjAwIn19.p_PtmXsDe3l_osPEzb4edkf-M2SCdUVBQBKs8ZAbpn8
 
 <div align="center">
 	<img src="https://mfgil.files.wordpress.com/2017/12/header.png" alt="Header">
@@ -215,8 +248,73 @@ Put the parameters on a Query Parameter.
 	<img src="https://mfgil.files.wordpress.com/2017/12/test.png" alt="Test">
 </div>
 
+Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [https://jwt.io/](https://jwt.io/).
+
+### Routes
+
+  * `/ping` - get method - This method is used for testing the api. e.g.: `/public/webresources/mobile_app/ping`
+
+  * `/login/{user}/{password}` - get method - This method gets a user into the database. e.g.: `/public/webresources/mobile_app/login/testUser/testPwd`
+
+  * `/register/{user}/{password}/{country}` - get method - This method sets a user into the database. e.g.: `/public/webresources/mobile_app/register/testUser/testPwd/1`
+
+  * `/verify` - get method - This method checks the token. e.g.: `/public/webresources/mobile_app/verify`
+
+  * `/post` - post method - This method publish short text messages of no more than 120 characters. e.g.: `/public/webresources/mobile_app/post`
+
+  * `/list` - get method - This method list the latest published messages. e.g.: `/public/webresources/mobile_app/list`
+
+  * `/likes/{id}` - get method - This method list the users for likes. e.g.: `/public/webresources/mobile_app/likes/1`
+
+  * `/search/{quote}` - get method - This method searches for messages by your text. e.g.: `/public/webresources/mobile_app/search/Quote`
+
+  * `/delete` - delete method - This method deletes a specific message by its id. e.g.: `/public/webresources/mobile_app/delete`
+
 <a name="changelog"></a>
 ## :information_source: Changelog
+
+**1.0.0.3** (07/07/2018)
+
+  * <table border="0" cellpadding="4">
+		<tr>
+			<td>
+				<strong>Language:</strong>
+			</td>
+			<td>
+				PHP
+			</td>
+		</tr>
+		<tr>
+			<td><strong>
+				Requirements:
+			</strong></td>
+			<td>
+				<ul>
+					<li>
+						PHP 5.6
+					</li>
+					<li>
+						MySQL or MariaDB 
+					</li>
+					<li>
+						Apache Server
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Changes:</strong>
+			</td>
+			<td>
+				<ul>
+					<li>
+						DotEnv integration
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
 
 **1.0.0.2** (03/29/2018)
 

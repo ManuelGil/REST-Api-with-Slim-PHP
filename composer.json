@@ -12,6 +12,7 @@
     "require": {
         "slim/slim": "^3.9",
         "monolog/monolog": "^1.23",
+        "vlucas/phpdotenv": "^2.5",
         "tuupola/slim-jwt-auth": "^2.3"
     }
 }

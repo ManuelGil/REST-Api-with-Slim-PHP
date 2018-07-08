@@ -1,12 +1,15 @@
 <?php
 
-  // Configuration for Database
-  define("DB_HOST", "localhost");
-  define("DB_USER", "root");
-  define("DB_PASS", "");
-  define("DB_NAME", "NETWORK");
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/../../');
+$dotenv->load();
 
-  // Secret for JWT Auth
-  define("SECRET", "secret");
+// Configuration for Database
+define("DB_HOST", getenv('DB_HOST'));
+define("DB_USER", getenv('DB_USER'));
+define("DB_PASS", getenv('DB_PASS'));
+define("DB_NAME", getenv('DB_NAME'));
+
+// Secret for JWT Auth
+define("SECRET", getenv('SECRET_KEY'));
 
 ?>
