@@ -202,12 +202,20 @@ CREATE TABLE IF NOT EXISTS `NETWORK`.`LIKES` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+COMMIT;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 ```
 
 #### Configure the project
 
-  Change the database configuration in the [`.env`](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/.env)
- file.
+  Copy the [`.env.example`](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/blob/master/.env.example)
+ file and call it `.env`.
+
+  Change the database configuration in the new file.
 
 <a name="deployment"></a>
 ## :package: Deployment
