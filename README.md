@@ -7,10 +7,10 @@
 		<img src="https://img.shields.io/badge/stability-stable-green.svg" alt="Status">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/release-v1.0.0.3-blue.svg" alt="Version">
+		<img src="https://img.shields.io/badge/release-v1.0.0.4-blue.svg" alt="Version">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/update-july-yellowgreen.svg" alt="Update">
+		<img src="https://img.shields.io/badge/update-august-yellowgreen.svg" alt="Update">
 	</a>
 	<a href="#license">
 		<img src="https://img.shields.io/badge/license-MIT%20License-green.svg" alt="License">
@@ -83,10 +83,10 @@ $ cd REST-Api-with-Slim-PHP
 $ composer install
 ```
 
-    Or
+  Or
 
 ```bash
-$ php composer.phar install  
+$ sudo php composer.phar install
 ```
 
 #### Create a database
@@ -222,7 +222,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 <div align="center">
 	<h3> Database Schema </h3>
-	<a href="#installation">
+	<a href="#create-a-database">
 		<img src="https://raw.githubusercontent.com/ManuelGil/Simple-Social-Network/master/docs/images/schema.png" alt="schema">
 	</a>
 </div>
@@ -231,7 +231,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 ## :wrench: Built With
 
   * XAMPP ([XAMPP for Windows 5.6.32](https://www.apachefriends.org/download.html))
-  * ATOM ([ATOM](https://atom.io/))
+  * Visual Studio Code ([VS Code](https://code.visualstudio.com/))
   * COMPOSER ([COMPOSER](https://getcomposer.org/))
   * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
 
@@ -280,6 +280,49 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
 
 <a name="changelog"></a>
 ## :information_source: Changelog
+
+**1.0.0.4** (09/12/2018)
+
+  * <table border="0" cellpadding="4">
+		<tr>
+			<td>
+				<strong>Language:</strong>
+			</td>
+			<td>
+				PHP
+			</td>
+		</tr>
+		<tr>
+			<td><strong>
+				Requirements:
+			</strong></td>
+			<td>
+				<ul>
+					<li>
+						PHP 5.6
+					</li>
+					<li>
+						MySQL or MariaDB 
+					</li>
+					<li>
+						Apache Server
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Changes:</strong>
+			</td>
+			<td>
+				<ul>
+					<li>
+						TODO: Unit testing
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
 
 **1.0.0.3** (07/07/2018)
 

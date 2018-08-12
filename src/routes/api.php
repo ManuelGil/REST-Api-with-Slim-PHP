@@ -1,5 +1,7 @@
 <?php
 
+use src\Controllers\MainController;
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -9,7 +11,7 @@ use Monolog\Handler\StreamHandler;
 $container = $app->getContainer();
 
 $container['logger'] = function ($c) {
-    // create a log channel
+	// create a log channel
 	$log = new Logger('api');
 	$log->pushHandler(new StreamHandler(__DIR__ . '/../logs/app.log', Logger::INFO));
 
@@ -21,24 +23,26 @@ $container['logger'] = function ($c) {
  * <b>post: </b>To access is required a valid token.
  */
 $app->add(new \Slim\Middleware\JwtAuthentication([
-    // The secret key
+	// The secret key
 	"secret" => SECRET,
 	"rules" => [
 		new \Slim\Middleware\JwtAuthentication\RequestPathRule([
-            // Degenerate access to '/webresources'
+			// Degenerate access to '/webresources'
 			"path" => "/webresources",
-            // It allows access to 'login' without a token
+			// It allows access to 'login' without a token
 			"passthrough" => [
 				"/webresources/mobile_app/ping",
 				"/webresources/mobile_app/login",
-				"/webresources/mobile_app/register"
+				"/webresources/mobile_app/register",
+				"/webresources/unit_testing/hello",
+				"/webresources/unit_testing/login"
 			]
 		])
 	]
 ]));
 
 /**
- * This method a url group. <br/>
+ * This method creates a urls group. <br/>
  * <b>post: </b>establishes the base url '/public/webresources/mobile_app/'.
  */
 $app->group('/webresources/mobile_app', function () use ($app) {
@@ -55,48 +59,48 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 	 * @param string $pass - password
 	 */
 	$app->get('/login/{user}/{password}', function (Request $request, Response $response) {
-      	// Gets username and password
+		// Gets username and password
 		$user = $request->getAttribute("user");
 		$pass = $request->getAttribute("password");
 
-      	// Gets the database connection
+		// Gets the database connection
 		$conn = PDOConnection::getConnection();
 
 		try {
-  			// Gets the user into the database
+			// Gets the user into the database
 			$sql = "SELECT * FROM USERS WHERE USERNAME=:user";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":user", $user);
 			$stmt->execute();
 			$query = $stmt->fetchObject();
 
-  			// If user exist
+			// If user exist
 			if ($query) {
-  				// If password is correct
+				// If password is correct
 				if (password_verify($pass, $query->PASSWORD)) {
-            		// Create a new resource
+					// Create a new resource
 					$data['token'] = JWTAuth::getToken($query->ID_USER, $query->USERNAME);
 				} else {
-  					// Password wrong
+					// Password wrong
 					$data['status'] = "Error: The password you have entered is wrong.";
 				}
 			} else {
-  				// Username wrong
+				// Username wrong
 				$data['status'] = "Error: The user specified does not exist.";
 			}
 
-        	// Return the result
+			// Return the result
 			$response = $response->withHeader('Content-Type', 'application/json');
-			$response = $response->withStatus(200);
+			$response = $response->withStatus(201, 'Created');
 			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
 			return $response;
 		} catch (PDOException $e) {
-			$this['logger']->error("DataBase Error.<br/>" . $e->getMessage());
+			$this['logger']->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
-			$this['logger']->error("General Error.<br/>" . $e->getMessage());
+			$this['logger']->error("General Error: {$e->getMessage()}");
 		}
 		finally {
-        	// Destroy the database connection
+			// Destroy the database connection
 			$conn = null;
 		}
 	});
@@ -110,19 +114,19 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 	$app->get('/register/{user}/{password}/{country}', function (Request $request, Response $response) {
 		// Unique ID
 		$guid = uniqid();
-      	// Gets username and password
+		// Gets username and password
 		$user = $request->getAttribute("user");
 		$pass = password_hash($request->getAttribute("password"), PASSWORD_DEFAULT);
-      	// Date of created
+		// Date of created
 		$created = date('Y-m-d');
-      	// Country ID
+		// Country ID
 		$country = (int)$request->getAttribute("country");
 
-      	// Gets the database connection
+		// Gets the database connection
 		$conn = PDOConnection::getConnection();
 
 		try {
-  			// Gets the user into the database
+			// Gets the user into the database
 			$sql = "INSERT INTO USERS(GUID, USERNAME, PASSWORD, CREATED_AT, ID_COUNTRY) VALUES(:guid, :user, :pass, :created, :country)";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":guid", $guid);
@@ -132,7 +136,7 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 			$stmt->bindParam(":country", $country);
 			$result = $stmt->execute();
 
-        	// If user has been registered
+			// If user has been registered
 			if ($result) {
 				$data['status'] = "Your account has been successfully created.";
 			} else {
@@ -140,16 +144,16 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 			}
 
 			$response = $response->withHeader('Content-Type', 'application/json');
-			$response = $response->withStatus(200);
+			$response = $response->withStatus(200, 'OK');
 			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
 			return $response;
 		} catch (PDOException $e) {
-			$this['logger']->error("DataBase Error.<br/>" . $e->getMessage());
+			$this['logger']->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
-			$this['logger']->error("General Error.<br/>" . $e->getMessage());
+			$this['logger']->error("General Error: {$e->getMessage()}");
 		}
 		finally {
-        	// Destroy the database connection
+			// Destroy the database connection
 			$conn = null;
 		}
 	});
@@ -158,14 +162,14 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 	 * This method cheks the token.
 	 */
 	$app->get('/verify', function (Request $request, Response $response) {
-      	// Gets the token of the header.
+		// Gets the token of the header.
 		$token = str_replace('Bearer ', '', $request->getServerParams()['HTTP_AUTHORIZATION']);
-      	// Verify the token.
+		// Verify the token.
 		$result = JWTAuth::verifyToken($token);
-      	// Return the result
+		// Return the result
 		$data['status'] = $result;
 		$response = $response->withHeader('Content-Type', 'application/json');
-		$response = $response->withStatus(200);
+		$response = $response->withStatus(200, 'OK');
 		$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
 		return $response;
 	});
@@ -176,29 +180,29 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 	 * @param int $id - The user id
 	 */
 	$app->post('/post', function (Request $request, Response $response) {
-      	// Gets quote and user id
+		// Gets quote and user id
 		$quote = $request->getParam('quote');
 		$id = $request->getParam('id');
 
-      	// Gets the database connection
+		// Gets the database connection
 		$conn = PDOConnection::getConnection();
 
 		try {
-        	// Gets the user into the database
+			// Gets the user into the database
 			$sql = "SELECT * FROM USERS WHERE ID_USER=:id";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":id", $id);
 			$stmt->execute();
 			$query = $stmt->fetchObject();
 
-  			// If user exist
+			// If user exist
 			if ($query) {
-          		// Truncate the text
+				// Truncate the text
 				if (strlen($quote) > 120) {
 					$quote = substr($quote, 0, 120);
 				}
 
-          		// Insert post into the database
+				// Insert post into the database
 				$sql = "INSERT INTO QUOTES(QUOTE, ID_USER) VALUES(:quote, :id)";
 				$stmt = $conn->prepare($sql);
 				$stmt->bindParam(":quote", $quote);
@@ -207,22 +211,22 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 
 				$data['status'] = $result;
 			} else {
-          		// Username wrong
+				// Username wrong
 				$data['status'] = "Error: The user specified does not exist.";
 			}
-        
-        	// Return the result
+		
+			// Return the result
 			$response = $response->withHeader('Content-Type', 'application/json');
-			$response = $response->withStatus(200);
+			$response = $response->withStatus(200, 'OK');
 			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
 			return $response;
 		} catch (PDOException $e) {
-			$this['logger']->error("DataBase Error.<br/>" . $e->getMessage());
+			$this['logger']->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
-			$this['logger']->error("General Error.<br/>" . $e->getMessage());
+			$this['logger']->error("General Error: {$e->getMessage()}");
 		}
 		finally {
-        	// Destroy the database connection
+			// Destroy the database connection
 			$conn = null;
 		}
 	});
@@ -231,27 +235,27 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 	 * This method list the latest published messages.
 	 */
 	$app->get('/list', function (Request $request, Response $response) {
-      	// Gets the database connection
+		// Gets the database connection
 		$conn = PDOConnection::getConnection();
 
 		try {
-        	// Gets the posts into the database
+			// Gets the posts into the database
 			$sql = "SELECT Q.ID_QUOTE AS id, Q.QUOTE AS quote, Q.POST_DATE AS postdate, Q.LIKES AS likes, U.USERNAME AS user FROM QUOTES AS Q, USERS AS U WHERE Q.ID_USER=U.ID_USER ORDER BY likes DESC";
 			$stmt = $conn->query($sql);
 			$data = $stmt->fetchAll();
 
-        	// Return a list
+			// Return a list
 			$response = $response->withHeader('Content-Type', 'application/json');
-			$response = $response->withStatus(200);
+			$response = $response->withStatus(200, 'OK');
 			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
 			return $response;
 		} catch (PDOException $e) {
-			$this['logger']->error("DataBase Error.<br/>" . $e->getMessage());
+			$this['logger']->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
-			$this['logger']->error("General Error.<br/>" . $e->getMessage());
+			$this['logger']->error("General Error: {$e->getMessage()}");
 		}
 		finally {
-        	// Destroy the database connection
+			// Destroy the database connection
 			$conn = null;
 		}
 	});
@@ -261,32 +265,32 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 	 * @param int $id - quote id
 	 */
 	$app->get('/likes/{id}', function (Request $request, Response $response) {
-      	// Gets quote
+		// Gets quote
 		$id = $request->getAttribute('id');
 
-      	// Gets the database connection
+		// Gets the database connection
 		$conn = PDOConnection::getConnection();
 
 		try {
-        	// Gets the posts into the database
+			// Gets the posts into the database
 			$sql = "SELECT U.GUID AS guid, U.USERNAME AS user FROM LIKES AS L, USERS AS U WHERE L.ID_USER = U.ID_USER AND L.ID_QUOTE = :id";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(':id', $id);
 			$stmt->execute();
 			$data = $stmt->fetchAll();
 
-        	// Return a list
+			// Return a list
 			$response = $response->withHeader('Content-Type', 'application/json');
-			$response = $response->withStatus(200);
+			$response = $response->withStatus(200, 'OK');
 			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
 			return $response;
 		} catch (PDOException $e) {
-			$this['logger']->error("DataBase Error.<br/>" . $e->getMessage());
+			$this['logger']->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
-			$this['logger']->error("General Error.<br/>" . $e->getMessage());
+			$this['logger']->error("General Error: {$e->getMessage()}");
 		}
 		finally {
-        	// Destroy the database connection
+			// Destroy the database connection
 			$conn = null;
 		}
 	});
@@ -296,14 +300,14 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 	 * @param string $quote - The text of post
 	 */
 	$app->get('/search/{quote}', function (Request $request, Response $response) {
-      	// Gets quote
+		// Gets quote
 		$quote = '%' . $request->getAttribute('quote') . '%';
 
-      	// Gets the database connection
+		// Gets the database connection
 		$conn = PDOConnection::getConnection();
 
 		try {
-        	// Search into the database
+			// Search into the database
 			$sql = "SELECT Q.ID_QUOTE AS id, Q.QUOTE AS quote, Q.POST_DATE AS postdate, Q.LIKES AS likes, U.USERNAME AS user FROM QUOTES AS Q, USERS AS U WHERE QUOTE LIKE :quote AND Q.ID_USER=U.ID_USER ORDER BY likes DESC";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(':quote', $quote);
@@ -312,16 +316,16 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 
 			// Return the result
 			$response = $response->withHeader('Content-Type', 'application/json');
-			$response = $response->withStatus(200);
+			$response = $response->withStatus(200, 'OK');
 			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
 			return $response;
 		} catch (PDOException $e) {
-			$this['logger']->error("DataBase Error.<br/>" . $e->getMessage());
+			$this['logger']->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
-			$this['logger']->error("General Error.<br/>" . $e->getMessage());
+			$this['logger']->error("General Error: {$e->getMessage()}");
 		}
 		finally {
-        	// Destroy the database connection
+			// Destroy the database connection
 			$conn = null;
 		}
 	});
@@ -331,37 +335,63 @@ $app->group('/webresources/mobile_app', function () use ($app) {
 	 * @param int $id - The quote id
 	 */
 	$app->delete('/delete', function (Request $request, Response $response) {
-      	// Gets quote id
+		// Gets quote id
 		$id = $request->getParam('id');
 
-      	// Gets the database connection
+		// Gets the database connection
 		$conn = PDOConnection::getConnection();
 
 		try {
-        	// Delete the quote
+			// Delete the quote
 			$sql = "DELETE FROM QUOTES WHERE ID_QUOTE=:id";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(':id', $id);
 			$result = $stmt->execute();
 
-        	// Return the result
+			// Return the result
 			$data['status'] = $result;
 
 			$response = $response->withHeader('Content-Type', 'application/json');
-			$response = $response->withStatus(200);
+			$response = $response->withStatus(200, 'OK');
 			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
 			return $response;
 		} catch (PDOException $e) {
-			$this['logger']->error("DataBase Error.<br/>" . $e->getMessage());
+			$this['logger']->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
-			$this['logger']->error("General Error.<br/>" . $e->getMessage());
+			$this['logger']->error("General Error: {$e->getMessage()}");
 		}
 		finally {
-        	// Destroy the database connection
+			// Destroy the database connection
 			$conn = null;
 		}
 	});
 
 });
+
+/**
+ * This method creates a urls group. <br/>
+ * <b>post: </b>establishes the base url '/public/webresources/unit_testing/'.
+ */
+$app->group('/webresources/unit_testing', function () use ($app) {
+	/**
+	 * This method is used for testing the api.<br/>
+	 * @param string $name
+	 */
+	$app->get('/hello/{name}', 'src\Controllers\MainController:hello');
+
+	/**
+	 * This method gets a user into the database.
+	 * @param string $user - username
+	 * @param string $pass - password
+	 */
+	$app->get('/login/{user}/{password}', 'src\Controllers\MainController:login');
+
+	/**
+	 * This method publish short text messages of no more than 120 characters.
+	 * @param string $quote - The text of post
+	 */
+	$app->post('/post', 'src\Controllers\MainController:post');
+});
+
 
 ?>

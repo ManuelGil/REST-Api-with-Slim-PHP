@@ -22,9 +22,9 @@ class JWTAuth
 	{
 		$secret = SECRET;
 
-    	// date: now
+		// date: now
 		$now = date('Y-m-d H:i:s');
-    	// date: now +2 hours
+		// date: now +2 hours
 		$future = date('Y-m-d H:i:s', mktime(date('H') + 2, date('i'), date('s'), date('m'), date('d'), date('Y')));
 
 		$token = array(
@@ -38,7 +38,7 @@ class JWTAuth
 			]
 		);
 
-    	// Encode Jwt Authentication Token
+		// Encode Jwt Authentication Token
 		return JWT::encode($token, $secret, "HS256");
 	}
 
@@ -51,16 +51,16 @@ class JWTAuth
 	{
 		$secret = SECRET;
 
-	    // Decode Jwt Authentication Token
+		// Decode Jwt Authentication Token
 		$obj = JWT::decode($token, $secret, array("HS256"));
 
-    	// If payload is defined
+		// If payload is defined
 		if (isset($obj->payload)) {
-	      	// Gets the actual date
+		  	// Gets the actual date
 			$now = strtotime(date('Y-m-d H:i:s'));
-      		// Gets the expiration date
+	  		// Gets the expiration date
 			$exp = strtotime($obj->payload->exp);
-      		// If token didn't expire
+	  		// If token didn't expire
 			if (($exp - $now) > 0) {
 				return true;
 			}
