@@ -281,7 +281,7 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
 <a name="changelog"></a>
 ## :information_source: Changelog
 
-**1.0.0.4** (09/12/2018)
+**1.0.0.4** (08/12/2018)
 
   * <table border="0" cellpadding="4">
 		<tr>
@@ -317,7 +317,7 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
 			<td>
 				<ul>
 					<li>
-						TODO: Unit testing
+						TODO: Unit testing ([help wanted](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/issues/5))
 					</li>
 				</ul>
 			</td>
