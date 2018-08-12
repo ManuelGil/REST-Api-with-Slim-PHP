@@ -317,7 +317,7 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
 			<td>
 				<ul>
 					<li>
-						TODO: Unit testing ([help wanted](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/issues/5))
+						TODO: Unit testing (<a href="https://github.com/ManuelGil/REST-Api-with-Slim-PHP/issues/5">help wanted</a>)
 					</li>
 				</ul>
 			</td>
