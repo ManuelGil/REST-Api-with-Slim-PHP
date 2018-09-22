@@ -223,43 +223,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 <a name="deployment"></a>
 ## :package: Deployment
 
+### Database Schema
+
 <div align="center">
-	<h3> Database Schema </h3>
 	<a href="#create-a-database">
 		<img src="https://raw.githubusercontent.com/ManuelGil/Simple-Social-Network/master/docs/images/schema.png" alt="schema">
 	</a>
 </div>
-
-<a name="built"></a>
-## :wrench: Built With
-
-  * XAMPP ([XAMPP for Windows 5.6.32](https://www.apachefriends.org/download.html))
-  * Visual Studio Code ([VS Code](https://code.visualstudio.com/))
-  * COMPOSER ([COMPOSER](https://getcomposer.org/))
-  * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
-
-<a name="test"></a>
-## :100: Running the tests
-
-Use RestEasy or Postman app for testing.
-
-For authentication you can generate a new JSON Web Token with the url login.
-
-Put the token on an HTTP header called Authorization. e.g.:
-
-  * Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJoZWFkZXIiOnsiaWQiOiIwIiwidXNlciI6Ik1hbnVlbEdpbCJ9LCJwYXlsb2FkIjp7ImlhdCI6IjIwMTktMDEtMDEgMDA6MDA6MDAiLCJleHAiOiIyMDIwLTAxLTAxIDAwOjAwOjAwIn19.p_PtmXsDe3l_osPEzb4edkf-M2SCdUVBQBKs8ZAbpn8
-
-<div align="center">
-	<img src="https://mfgil.files.wordpress.com/2017/12/header.png" alt="Header">
-</div>
-
-Put the parameters on a Query Parameter.
-
-<div align="center">
-	<img src="https://mfgil.files.wordpress.com/2017/12/test.png" alt="Test">
-</div>
-
-Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [https://jwt.io/](https://jwt.io/).
 
 ### Routes
 
@@ -280,7 +250,7 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
     > params = [user =>testUser, password => testPwd, email => example@example.com, country => 1]
 
 
-  * `get` => `/validate/{user}/{token}` - This method checks the token. e.g.:
+  * `get` => `/validate/{user}/{token}` - This method verify the user account. e.g.:
 
     > uri = `/public/webresources/mobile_app/validate/testUser/326f0911657d94d0a48530058ca2a383`
 
@@ -318,6 +288,37 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
 
     > params = [id => quoteId]
 
+
+<a name="built"></a>
+## :wrench: Built With
+
+  * XAMPP ([XAMPP for Windows 5.6.32](https://www.apachefriends.org/download.html))
+  * Visual Studio Code ([VS Code](https://code.visualstudio.com/))
+  * COMPOSER ([COMPOSER](https://getcomposer.org/))
+  * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
+
+<a name="test"></a>
+## :100: Running the tests
+
+Use RestEasy or Postman app for testing.
+
+For authentication you can generate a new JSON Web Token with the url login.
+
+Put the token on an HTTP header called Authorization. e.g.:
+
+  * Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJoZWFkZXIiOnsiaWQiOiIwIiwidXNlciI6Ik1hbnVlbEdpbCJ9LCJwYXlsb2FkIjp7ImlhdCI6IjIwMTktMDEtMDEgMDA6MDA6MDAiLCJleHAiOiIyMDIwLTAxLTAxIDAwOjAwOjAwIn19.p_PtmXsDe3l_osPEzb4edkf-M2SCdUVBQBKs8ZAbpn8
+
+<div align="center">
+	<img src="https://mfgil.files.wordpress.com/2017/12/header.png" alt="Header">
+</div>
+
+Put the parameters on a Query Parameter.
+
+<div align="center">
+	<img src="https://mfgil.files.wordpress.com/2017/12/test.png" alt="Test">
+</div>
+
+Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [https://jwt.io/](https://jwt.io/).
 
 <a name="changelog"></a>
 ## :information_source: Changelog
