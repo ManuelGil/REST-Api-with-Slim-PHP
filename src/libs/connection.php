@@ -28,17 +28,13 @@ class PDOConnection
 		/** @var string connection string */
 		$dsn = "mysql:host=$host;dbname=$name;charset=utf8";
 
-		try {
-			// Create a new PDO connection
-			$connection = new PDO($dsn, $user, $pass);
-			$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+		// Create a new PDO connection
+		$connection = new PDO($dsn, $user, $pass);
+		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-			// Return the connection
-			return $connection;
-		} catch (PDOException $e) {
-			die($e);
-		}
+		// Return the connection
+		return $connection;
 	}
 }
 

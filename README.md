@@ -7,10 +7,10 @@
 		<img src="https://img.shields.io/badge/stability-stable-green.svg" alt="Status">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/release-v1.0.0.4-blue.svg" alt="Version">
+		<img src="https://img.shields.io/badge/release-v1.0.0.5-blue.svg" alt="Version">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/update-august-yellowgreen.svg" alt="Update">
+		<img src="https://img.shields.io/badge/update-september-yellowgreen.svg" alt="Update">
 	</a>
 	<a href="#license">
 		<img src="https://img.shields.io/badge/license-MIT%20License-green.svg" alt="License">
@@ -135,9 +135,11 @@ INSERT INTO `NETWORK`.`COUNTRIES` (`ID_COUNTRY`, `ISO`, `COUNTRY`) VALUES
 CREATE TABLE IF NOT EXISTS `NETWORK`.`USERS` (
   `ID_USER` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `GUID` VARCHAR(20) NOT NULL,
+  `TOKEN` VARCHAR(255) DEFAULT NULL,
   `USERNAME` VARCHAR(20) NOT NULL,
   `PASSWORD` VARCHAR(255) NOT NULL,
   `CREATED_AT` DATE NOT NULL,
+  `STATUS` TINYINT(1) NOT NULL DEFAULT '0',
   `ID_COUNTRY` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`ID_USER`),
   UNIQUE INDEX `ID_USER_UNIQUE` (`ID_USER` ASC),
@@ -154,8 +156,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Dumping data for table `NETWORK`.`USERS`
 -- -----------------------------------------------------
-INSERT INTO `NETWORK`.`USERS` (`ID_USER`, `GUID`, `USERNAME`, `PASSWORD`, `CREATED_AT`, `ID_COUNTRY`) VALUES
-(0, '', 'ManuelGil', '', '2018-01-01', 1);
+INSERT INTO `users` (`ID_USER`, `GUID`, `TOKEN`, `USERNAME`, `PASSWORD`, `CREATED_AT`, `STATUS`, `ID_COUNTRY`) VALUES
+(0, '5acff05a49592', NULL, 'ManuelGil', '', '2018-01-01', 1, 47),
+(1, '5ba4524f296c3', NULL, 'testUser', '$2y$10$dRWUrwXE56p3zvEadmnMYeFivd6aU9BfGb4LXsmf5p.xQlkTAX/V6', '2018-01-01', 1, 1);
 
 -- -----------------------------------------------------
 -- Table `NETWORK`.`QUOTES`
@@ -260,26 +263,113 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
 
 ### Routes
 
-  * `/ping` - get method - This method is used for testing the api. e.g.: `/public/webresources/mobile_app/ping`
+  * `get` => `/ping` - This method is used for testing the api. e.g.:
 
-  * `/login/{user}/{password}` - get method - This method gets a user into the database. e.g.: `/public/webresources/mobile_app/login/testUser/testPwd`
+    > uri = `/public/webresources/mobile_app/ping`
 
-  * `/register/{user}/{password}/{country}` - get method - This method sets a user into the database. e.g.: `/public/webresources/mobile_app/register/testUser/testPwd/1`
 
-  * `/verify` - get method - This method checks the token. e.g.: `/public/webresources/mobile_app/verify`
+  * `get` => `/login/{user}/{password}` - This method gets a user into the database. e.g.:
 
-  * `/post` - post method - This method publish short text messages of no more than 120 characters. e.g.: `/public/webresources/mobile_app/post`
+    > uri = `/public/webresources/mobile_app/login/testUser/testPwd`
 
-  * `/list` - get method - This method list the latest published messages. e.g.: `/public/webresources/mobile_app/list`
 
-  * `/likes/{id}` - get method - This method list the users for likes. e.g.: `/public/webresources/mobile_app/likes/1`
+  * `post` => `/register` - This method sets a user into the database. e.g.:
 
-  * `/search/{quote}` - get method - This method searches for messages by your text. e.g.: `/public/webresources/mobile_app/search/Quote`
+    > uri = `/public/webresources/mobile_app/register`
 
-  * `/delete` - delete method - This method deletes a specific message by its id. e.g.: `/public/webresources/mobile_app/delete`
+    > params = [user =>testUser, password => testPwd, email => example@example.com, country => 1]
+
+
+  * `get` => `/validate/{user}/{token}` - This method checks the token. e.g.:
+
+    > uri = `/public/webresources/mobile_app/validate/testUser/326f0911657d94d0a48530058ca2a383`
+
+
+  * `get` => `/verify` - This method checks the token. e.g.:
+
+    > uri = `/public/webresources/mobile_app/verify`
+
+
+  * `post` => `/post` - This method publish short text messages of no more than 120 characters. e.g.:
+
+    > uri = `/public/webresources/mobile_app/post`
+
+    > params = [quote =>quote, id => userId]
+
+
+  * `get` => `/list` - This method list the latest published messages. e.g.:
+
+    > uri = `/public/webresources/mobile_app/list`
+
+
+  * `get` => `/likes/{id}` - get method - This method list the users for likes. e.g.:
+
+    > uri = `/public/webresources/mobile_app/likes/1`
+
+
+  * `get` => `/search/{quote}` - get method - This method searches for messages by your text. e.g.:
+
+    > uri = `/public/webresources/mobile_app/search/Quote`
+
+
+  * `delete` => `/delete` - delete method - This method deletes a specific message by its id. e.g.:
+
+    > uri = `/public/webresources/mobile_app/delete`
+
+    > params = [id => quoteId]
+
 
 <a name="changelog"></a>
 ## :information_source: Changelog
+
+**1.0.0.5** (09/23/2018)
+
+  * <table border="0" cellpadding="4">
+		<tr>
+			<td>
+				<strong>Language:</strong>
+			</td>
+			<td>
+				PHP
+			</td>
+		</tr>
+		<tr>
+			<td><strong>
+				Requirements:
+			</strong></td>
+			<td>
+				<ul>
+					<li>
+						PHP 5.6
+					</li>
+					<li>
+						MySQL or MariaDB 
+					</li>
+					<li>
+						Apache Server
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Changes:</strong>
+			</td>
+			<td>
+				<ul>
+					<li>
+						PHPMail integration
+					</li>
+					<li>
+						Protection of files with .htaccess
+					</li>
+					<li>
+						Improvement in documentation
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
 
 **1.0.0.4** (08/12/2018)
 
@@ -317,7 +407,7 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
 			<td>
 				<ul>
 					<li>
-						TODO: Unit testing (<a href="https://github.com/ManuelGil/REST-Api-with-Slim-PHP/issues/5">help wanted</a>)
+						TODO: Unit testing (Removed)
 					</li>
 				</ul>
 			</td>

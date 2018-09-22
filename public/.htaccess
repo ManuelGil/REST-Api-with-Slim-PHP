@@ -1,6 +1,20 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
+Options -Indexes
+IndexIgnore *
 
-RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+<Files ~ "\.(env|json|config.js|md|gitignore|gitattributes|lock|log)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<IfModule mod_headers.c>
+    Header set X-Robots-Tag "noindex,nofollow,noarchive,nosnippet"
+</ifModule>
+
+<ifModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+
+    RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</ifModule>

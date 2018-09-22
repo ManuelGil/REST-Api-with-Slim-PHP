@@ -6,6 +6,8 @@ require "config/config.php";
 require "libs/auth.php";
 // Load database connection
 require "libs/connection.php";
+// Load mail
+require "libs/mail.php";
 // Load api
 require "routes/api.php";
 
