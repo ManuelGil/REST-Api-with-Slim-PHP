@@ -10,7 +10,7 @@
 		<img src="https://img.shields.io/badge/release-v1.0.0.6-blue.svg" alt="Version">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/update-september-yellowgreen.svg" alt="Update">
+		<img src="https://img.shields.io/badge/update-january-yellowgreen.svg" alt="Update">
 	</a>
 	<a href="#license">
 		<img src="https://img.shields.io/badge/license-MIT%20License-green.svg" alt="License">
@@ -37,9 +37,6 @@ This page will help you get started with this API.
   * PHP 5.6
   * MySQL or MariaDB
   * Apache Server
-
-<a name="installation"></a>
-### Installation
 
 <a name="installation"></a>
 ### Installation
@@ -236,8 +233,11 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 <a name="built"></a>
 ## Built With
 
-  * XAMPP ([XAMPP for Windows 5.6.32](https://www.apachefriends.org/download.html))
-  * VSCODE ([Visual Studio Code](https://code.visualstudio.com/))
+  * XAMPP for Windows 5.6.32 ([XAMPP](https://www.apachefriends.org/download.html))
+  * Visual Studio Code ([VSCode](https://code.visualstudio.com/))
+  * COMPOSER ([COMPOSER](https://getcomposer.org/))
+  * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
+
 
 <a name="changelog"></a>
 ## Changelog

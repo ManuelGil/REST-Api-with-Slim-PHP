@@ -10,7 +10,7 @@
 		<img src="https://img.shields.io/badge/release-v1.0.0.6-blue.svg" alt="Version">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/update-september-yellowgreen.svg" alt="Update">
+		<img src="https://img.shields.io/badge/update-january-yellowgreen.svg" alt="Update">
 	</a>
 	<a href="#license">
 		<img src="https://img.shields.io/badge/license-MIT%20License-green.svg" alt="License">
@@ -292,8 +292,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 <a name="built"></a>
 ## :wrench: Built With
 
-  * XAMPP ([XAMPP for Windows 5.6.32](https://www.apachefriends.org/download.html))
-  * Visual Studio Code ([VS Code](https://code.visualstudio.com/))
+  * XAMPP for Windows 5.6.32 ([XAMPP](https://www.apachefriends.org/download.html))
+  * Visual Studio Code ([VSCode](https://code.visualstudio.com/))
   * COMPOSER ([COMPOSER](https://getcomposer.org/))
   * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
 
@@ -313,6 +313,7 @@ Put the parameters on a Query Parameter.
 <div align="center">
 	<img src="https://raw.githubusercontent.com/ManuelGil/REST-Api-with-Slim-PHP/master/docs/images/headers.gif" alt="headers">
 </div>
+
 
 Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [https://jwt.io/](https://jwt.io/).
 
