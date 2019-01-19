@@ -6,26 +6,23 @@
 class PDOConnection
 {
 
-	private function __construct()
-	{
-	}
-
 	/**
 	 * This function create a database connection
-	 * @return object database connection
+	 *
+	 * @return	object	database connection
 	 */
 	public static function getConnection()
 	{
-		/** @var string hostname */
+		/** @var string $host - Hostname */
 		$host = DB_HOST;
-		/** @var string database username */
+		/** @var string $user - Database username */
 		$user = DB_USER;
-		/** @var string database password */
+		/** @var string $pass - Database password */
 		$pass = DB_PASS;
-		/** @var string database name */
+		/** @var string $name - Database name */
 		$name = DB_NAME;
 
-		/** @var string connection string */
+		/** @var string $dsn - Connection string */
 		$dsn = "mysql:host=$host;dbname=$name;charset=utf8";
 
 		// Create a new PDO connection

@@ -8,15 +8,13 @@ use \Firebase\JWT\JWT;
 class JWTAuth
 {
 
-	private function __construct()
-	{
-	}
-
 	/**
 	 * This method create a valid token.
-	 * @param int $id - user id
-	 * @param string $user - username
-	 * @return string JWT - valid token.
+	 *
+	 * @param	int		$id		The user id
+	 * @param	string	$user	Username
+	 *
+	 * @return	string	JWT		Valid token.
 	 */
 	public static function getToken($id, $user)
 	{
@@ -28,13 +26,13 @@ class JWTAuth
 		$future = date('Y-m-d H:i:s', mktime(date('H') + 2, date('i'), date('s'), date('m'), date('d'), date('Y')));
 
 		$token = array(
-			'header' => [ // User Information
-				'id' => $id, // User id
-				'user' => $user // username
+			'header' => [ 			// User Information
+				'id' 	=> 	$id, 	// User id
+				'user' 	=> 	$user 	// username
 			],
 			'payload' => [
-				'iat' => $now, // Start time of the token
-				'exp' => $future // Time the token expires (+2 hours)
+				'iat'	=>	$now, 	// Start time of the token
+				'exp'	=>	$future	// Time the token expires (+2 hours)
 			]
 		);
 
@@ -44,8 +42,10 @@ class JWTAuth
 
 	/**
 	 * This method verify a token.
-	 * @param string $token - token.
-	 * @return boolean valid token.
+	 *
+	 * @param	string	$token	token.
+	 *
+	 * @return	boolean
 	 */
 	public static function verifyToken($token)
 	{

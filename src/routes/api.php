@@ -3,6 +3,7 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
+// Import Monolog classes into the global namespace
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -39,12 +40,35 @@ $app->add(new \Slim\Middleware\JwtAuthentication([
 ]));
 
 /**
+ * This method settings CORS requests
+ *
+ * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+ * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+ * @param	callable                                 	$next     	Next middleware
+ *
+ * @return	\Psr\Http\Message\ResponseInterface
+ */
+$app->add(function (Request $request, Response $response, $next) {
+	$response = $next($request, $response);
+	// Access-Control-Allow-Origin: <domain>, ... | *
+	$response = $response->withHeader('Access-Control-Allow-Origin', '*')
+				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+	return $response;
+});
+
+/**
  * This method creates a urls group. <br/>
  * <b>post: </b>establishes the base url "/public/webresources/mobile_app/".
  */
 $app->group("/webresources/mobile_app", function () use ($app) {
 	/**
 	 * This method is used for testing the api.<br/>
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return	string
 	 */
 	$app->get("/ping", function (Request $request, Response $response) {
 		return "pong";
@@ -52,12 +76,16 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method gets a user into the database.
-	 * @param string $user - username
-	 * @param string $pass - password
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->get("/login/{user}/{password}", function (Request $request, Response $response) {
-		// Gets username and password
+		/** @var string $user - Username */
 		$user = $request->getAttribute("user");
+		/** @var string $pass - Password */
 		$pass = $request->getAttribute("password");
 
 		try {
@@ -65,9 +93,10 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$conn = PDOConnection::getConnection();
 
 			// Gets the user into the database
-			$sql = "SELECT * FROM USERS
-					WHERE USERNAME = :user
-					AND STATUS = 1";
+			$sql = "SELECT	*
+					FROM	USERS
+					WHERE	USERNAME = :user
+						AND	STATUS = 1";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":user", $user);
 			$stmt->execute();
@@ -106,22 +135,26 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method sets a user into the database.
-	 * @param string $user - username
-	 * @param string $pass - password
-	 * @param int $country - country id
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->post("/register", function (Request $request, Response $response) {
-		// Unique ID
+		/** @var string $guid - Unique ID */
 		$guid = uniqid();
-		// Activation token
+		/** @var string $token - Activation token */
 		$token = bin2hex(openssl_random_pseudo_bytes(16));
-		// Gets username, email and password
+		/** @var string $user - Username */
 		$user = $request->getParam("user");
+		/** @var string $pass - Password */
 		$pass = password_hash($request->getParam("password"), PASSWORD_DEFAULT);
+		/** @var string $email - Email */
 		$email = trim(strtolower($request->getParam("email")));
-		// Date of created
+		/** @var string $created - Date of created */
 		$created = date("Y-m-d");
-		// Country ID
+		/** @var string $country - Country ID */
 		$country = (int)$request->getParam("country");
 
 		try {
@@ -129,8 +162,8 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$conn = PDOConnection::getConnection();
 
 			// Gets the user into the database
-			$sql = "INSERT INTO USERS (GUID, TOKEN, USERNAME, PASSWORD, CREATED_AT, ID_COUNTRY)
-					VALUES (:guid, :token, :user, :pass, :created, :country)";
+			$sql = "INSERT INTO	USERS (GUID, TOKEN, USERNAME, PASSWORD, CREATED_AT, ID_COUNTRY)
+					VALUES		(:guid, :token, :user, :pass, :created, :country)";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":guid", $guid);
 			$stmt->bindParam(":token", $token);
@@ -144,13 +177,14 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			if ($result) {
 				$data["status"] = "Your account has been successfully created. We will send you an email to confirm that your email address is valid.";
 
-				$from = "username@gmail.com";
-				$to = $email;
-				$name = $user;
-				$subject = "Confirm your email address";
+				$from		=	"username@gmail.com";
+				$to			=	$email;
+				$name		=	$user;
+				$subject	=	"Confirm your email address";
+				
 				// Example of the confirmation link: http://localhost/rest/public/webresources/mobile_app/validate/testUser/326f0911657d94d0a48530058ca2a383
-				$html = "Click on the link to verify your email <a href='http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}' target='_blank'>Link</a>";
-				$text = "Go to the link to verify your email: http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}";
+				$html		=	"Click on the link to verify your email <a href='http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}' target='_blank'>Link</a>";
+				$text		=	"Go to the link to verify your email: http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}";
 
 				// Sent mail verification
 				Mailer::send($from, $to, $name, $subject, $html, $text);
@@ -175,22 +209,26 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method sets a user into the database.
-	 * @param string $user - username
-	 * @param string $pass - password
-	 * @param int $country - country id
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return 	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->get("/validate/{user}/{token}", function (Request $request, Response $response) {
-		// Gets username and password
+		/** @var string $user - Username */
 		$user = $request->getAttribute("user");
+		/** @var string $pass - Password */
 		$token = $request->getAttribute("token");
 
 		try {
 			// Gets the database connection
 			$conn = PDOConnection::getConnection();
 
-			$sql = "SELECT * FROM USERS
-					WHERE USERNAME = :user
-					AND TOKEN = :token";
+			$sql = "SELECT	*
+					FROM	USERS
+					WHERE	USERNAME = :user
+						AND	TOKEN = :token";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":user", $user);
 			$stmt->bindParam(":token", $token);
@@ -200,10 +238,10 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			// If user exist
 			if ($query) {
 				// Gets the user into the database
-				$sql = "UPDATE USERS
-						SET TOKEN = NULL,
-							STATUS = 1
-						WHERE USERNAME = :user";
+				$sql = "UPDATE	USERS
+						SET		TOKEN = NULL,
+								STATUS = 1
+						WHERE	USERNAME = :user";
 				$stmt = $conn->prepare($sql);
 				$stmt->bindParam(":user", $user);
 				$result = $stmt->execute();
@@ -217,7 +255,7 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			} else {
 				// Username wrong
 				$data["status"] = "Error: The user specified does not exist.";
-				
+
 			}
 
 			$response = $response->withHeader("Content-Type", "application/json");
@@ -237,9 +275,16 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method cheks the token.
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return 	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->get("/verify", function (Request $request, Response $response) {
 		// Gets the token of the header.
+		// Authorization: Bearer {token}
+		/** @var string $token - Token */
 		$token = str_replace("Bearer ", "", $request->getServerParams()["HTTP_AUTHORIZATION"]);
 		// Verify the token.
 		$result = JWTAuth::verifyToken($token);
@@ -253,12 +298,16 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method publish short text messages of no more than 120 characters.
-	 * @param string $quote - The text of post
-	 * @param int $id - The user id
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->post("/post", function (Request $request, Response $response) {
-		// Gets quote and user id
+		/** @var string $quote - The text of post */
 		$quote = $request->getParam("quote");
+		/** @var string $id - The user ID */
 		$id = $request->getParam("id");
 
 		try {
@@ -266,8 +315,9 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$conn = PDOConnection::getConnection();
 
 			// Gets the user into the database
-			$sql = "SELECT * FROM USERS
-					WHERE ID_USER = :id";
+			$sql = "SELECT	*
+					FROM	USERS
+					WHERE	ID_USER = :id";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":id", $id);
 			$stmt->execute();
@@ -281,8 +331,8 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 				}
 
 				// Insert post into the database
-				$sql = "INSERT INTO QUOTES (QUOTE, ID_USER)
-						VALUES (:quote, :id)";
+				$sql = "INSERT INTO	QUOTES (QUOTE, ID_USER)
+						VALUES		(:quote, :id)";
 				$stmt = $conn->prepare($sql);
 				$stmt->bindParam(":quote", $quote);
 				$stmt->bindParam(":id", $id);
@@ -312,6 +362,11 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method list the latest published messages.
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return 	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->get("/list", function (Request $request, Response $response) {
 		try {
@@ -319,15 +374,15 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$conn = PDOConnection::getConnection();
 
 			// Gets the posts into the database
-			$sql = "SELECT 
-						Q.ID_QUOTE AS id,
-						Q.QUOTE AS quote,
-						Q.POST_DATE AS postdate,
-						Q.LIKES AS likes,
-						U.USERNAME AS user
-					FROM QUOTES AS Q
-					INNER JOIN USERS AS U ON Q.ID_USER = U.ID_USER
-					ORDER BY likes DESC";
+			$sql = "SELECT		Q.ID_QUOTE AS id,
+								Q.QUOTE AS quote,
+								Q.POST_DATE AS postdate,
+								Q.LIKES AS likes,
+								U.USERNAME AS user
+					FROM		QUOTES AS Q
+					INNER JOIN	USERS AS U
+							ON	Q.ID_USER = U.ID_USER
+					ORDER BY	likes DESC";
 			$stmt = $conn->query($sql);
 			$data = $stmt->fetchAll();
 
@@ -349,10 +404,14 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method list the users for likes.
-	 * @param int $id - quote id
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return 	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->get("/likes/{id}", function (Request $request, Response $response) {
-		// Gets quote
+		/** @var string $id - The quote ID */
 		$id = $request->getAttribute("id");
 
 		try {
@@ -360,12 +419,12 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$conn = PDOConnection::getConnection();
 
 			// Gets the posts into the database
-			$sql = "SELECT
-						U.GUID AS guid,
-						U.USERNAME AS user
-					FROM LIKES AS L
-					INNER JOIN USERS AS U ON L.ID_USER = U.ID_USER
-					AND L.ID_QUOTE = :id";
+			$sql = "SELECT		U.GUID AS guid,
+								U.USERNAME AS user
+					FROM		LIKES AS L
+					INNER JOIN	USERS AS U
+							ON	L.ID_USER = U.ID_USER
+					AND			L.ID_QUOTE = :id";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":id", $id);
 			$stmt->execute();
@@ -389,10 +448,14 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method searches for messages by your text.
-	 * @param string $quote - The text of post
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return 	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->get("/search/{quote}", function (Request $request, Response $response) {
-		// Gets quote
+		/** @var string $quote - The content text in quote */
 		$quote = "%" . $request->getAttribute("quote") . "%";
 
 		try {
@@ -400,16 +463,16 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$conn = PDOConnection::getConnection();
 
 			// Search into the database
-			$sql = "SELECT
-						Q.ID_QUOTE AS id,
-						Q.QUOTE AS quote,
-						Q.POST_DATE AS postdate,
-						Q.LIKES AS likes,
-						U.USERNAME AS user
-					FROM QUOTES AS Q
-					INNER JOIN USERS AS U ON Q.ID_USER = U.ID_USER
-					WHERE QUOTE LIKE :quote
-					ORDER BY likes DESC";
+			$sql = "SELECT		Q.ID_QUOTE AS id,
+								Q.QUOTE AS quote,
+								Q.POST_DATE AS postdate,
+								Q.LIKES AS likes,
+								U.USERNAME AS user
+					FROM		QUOTES AS Q
+					INNER JOIN	USERS AS U
+							ON	Q.ID_USER = U.ID_USER
+					WHERE		QUOTE LIKE :quote
+					ORDER BY	likes DESC";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":quote", $quote);
 			$stmt->execute();
@@ -433,10 +496,14 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 
 	/**
 	 * This method deletes a specific message by its id.
-	 * @param int $id - The quote id
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return 	\Psr\Http\Message\ResponseInterface
 	 */
 	$app->delete("/delete", function (Request $request, Response $response) {
-		// Gets quote id
+		/** @var string $id - The quote id */
 		$id = $request->getParam("id");
 
 		try {
@@ -444,8 +511,8 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$conn = PDOConnection::getConnection();
 
 			// Delete the quote
-			$sql = "DELETE FROM QUOTES
-					WHERE ID_QUOTE = :id";
+			$sql = "DELETE FROM	QUOTES
+					WHERE		ID_QUOTE = :id";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindParam(":id", $id);
 			$result = $stmt->execute();

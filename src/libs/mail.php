@@ -8,42 +8,40 @@ use PHPMailer\PHPMailer\Exception;
 class Mailer
 {
 
-	private function __construct()
-	{
-	}
-
 	/**
-	 * Undocumented function
-	 * @param string $from
-	 * @param string $to
-	 * @param string $name
-	 * @param string $subject
-	 * @param string $html
-	 * @param string $text
-	 * @return boolean
+	 * This method sends a email
+	 *
+	 * @param	string	$fro	 	Email address origin 
+	 * @param	string	$to			Email addess destination
+	 * @param	string	$name		Name of addressee
+	 * @param	string	$subject	Topic of message
+	 * @param	string	$html		Message HTML
+	 * @param	string	$text		Message simple
+	 *
+	 * @return	boolean
 	 */
 	public static function send($from, $to, $name, $subject, $html, $text)
 	{
-		$mail = new PHPMailer(true);							// Passing `true` enables exceptions
+		$mail = new PHPMailer(true);						// Passing `true` enables exceptions
 			
 		//Server settings
-		$mail->SMTPDebug = 0;									// Enable verbose debug output
-		$mail->isSMTP();										// Set mailer to use SMTP
-		$mail->Host = 'smtp.gmail.com';							// Specify main and backup SMTP servers
-		$mail->SMTPAuth = true;									// Enable SMTP authentication
-		$mail->Username = 'username@gmail.com';					// SMTP username
-		$mail->Password = 'yourpassword';						// SMTP password
-		$mail->SMTPSecure = 'tls';								// Enable TLS encryption, `ssl` also accepted
-		$mail->Port = 587;										// TCP port to connect to
+		$mail->SMTPDebug = 0;								// Enable verbose debug output
+		$mail->isSMTP();									// Set mailer to use SMTP
+		$mail->Host = 'smtp.gmail.com';						// Specify main and backup SMTP servers
+		$mail->SMTPAuth = true;								// Enable SMTP authentication
+		$mail->Username = 'username@gmail.com';				// SMTP username
+		$mail->Password = 'yourpassword';					// SMTP password
+		$mail->SMTPSecure = 'tls';							// Enable TLS encryption, `ssl` also accepted
+		$mail->Port = 587;									// TCP port to connect to
 
 		//Recipients
-		$mail->AddReplyTo($from, 'Fav Quote');
-		$mail->SetFrom($from, 'Fav Quote');
-		$mail->AddAddress($to, $name);							// Add a recipient
+		$mail->AddReplyTo($from, 'Admin Fav Quote');
+		$mail->SetFrom($from, 'Admin Fav Quote');
+		$mail->AddAddress($to, $name);						// Add a recipient
 		$mail->addBCC($from);
 
 		//Content
-		$mail->isHTML(true);									// Set email format to HTML
+		$mail->isHTML(true);								// Set email format to HTML
 		$mail->Subject = $subject;
 		$mail->Body = $html;
 		$mail->AltBody = $text;
