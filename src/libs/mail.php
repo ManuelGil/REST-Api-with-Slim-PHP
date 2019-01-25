@@ -20,32 +20,32 @@ class Mailer
 	 *
 	 * @return	boolean
 	 */
-	public static function send($from, $to, $name, $subject, $html, $text)
+	public static function send($to, $name, $subject, $html, $text)
 	{
 		$mail = new PHPMailer(true);						// Passing `true` enables exceptions
 			
 		//Server settings
-		$mail->SMTPDebug = 0;								// Enable verbose debug output
+		$mail->SMTPDebug	=	0;							// Enable verbose debug output
 		$mail->isSMTP();									// Set mailer to use SMTP
-		$mail->Host = 'smtp.gmail.com';						// Specify main and backup SMTP servers
-		$mail->SMTPAuth = true;								// Enable SMTP authentication
-		$mail->Username = 'username@gmail.com';				// SMTP username
-		$mail->Password = 'yourpassword';					// SMTP password
-		$mail->SMTPSecure = 'tls';							// Enable TLS encryption, `ssl` also accepted
-		$mail->Port = 587;									// TCP port to connect to
+		$mail->Host			=	MAIL_HOST;					// Specify main and backup SMTP servers
+		$mail->Username		=	MAIL_USER;					// SMTP username
+		$mail->Password		=	MAIL_PASS;					// SMTP password
+		$mail->SMTPAuth		=	true;						// Enable SMTP authentication
+		$mail->SMTPSecure	=	'tls';						// Enable TLS encryption, `ssl` also accepted
+		$mail->Port			=	587;						// TCP port to connect to
 
 		//Recipients
-		$mail->AddReplyTo($from, 'Admin Fav Quote');
-		$mail->SetFrom($from, 'Admin Fav Quote');
+		$mail->AddReplyTo(MAIL_USER, MAIL_NAME);			// Add a "Reply-To" address (Optional)
+		$mail->SetFrom(MAIL_USER, MAIL_NAME);
 		$mail->AddAddress($to, $name);						// Add a recipient
-		$mail->addBCC($from);
+		$mail->addBCC(MAIL_USER);							// Add a "BCC" address (Optional)
 
 		//Content
 		$mail->isHTML(true);								// Set email format to HTML
-		$mail->Subject = $subject;
-		$mail->Body = $html;
-		$mail->AltBody = $text;
-		$mail->CharSet = 'UTF-8';
+		$mail->Subject		=	$subject;
+		$mail->Body			=	$html;
+		$mail->AltBody		=	$text;
+		$mail->CharSet		=	'UTF-8';
 
 		if (filter_var($to, FILTER_VALIDATE_EMAIL) !== false) {
 			$result = $mail->send();

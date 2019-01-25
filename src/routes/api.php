@@ -52,13 +52,13 @@ $app->add(function (Request $request, Response $response, $next) {
 	$response = $next($request, $response);
 	// Access-Control-Allow-Origin: <domain>, ... | *
 	$response = $response->withHeader('Access-Control-Allow-Origin', '*')
-				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+		->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+		->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 	return $response;
 });
 
 /**
- * This method creates a urls group. <br/>
+ * This method creates an urls group. <br/>
  * <b>post: </b>establishes the base url "/public/webresources/mobile_app/".
  */
 $app->group("/webresources/mobile_app", function () use ($app) {
@@ -75,7 +75,7 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 	});
 
 	/**
-	 * This method gets a user into the database.
+	 * This method gets an user into the database.
 	 *
 	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
 	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
@@ -134,7 +134,7 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 	});
 
 	/**
-	 * This method sets a user into the database.
+	 * This method sets an user into the database.
 	 *
 	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
 	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
@@ -177,17 +177,16 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			if ($result) {
 				$data["status"] = "Your account has been successfully created. We will send you an email to confirm that your email address is valid.";
 
-				$from		=	"username@gmail.com";
-				$to			=	$email;
-				$name		=	$user;
-				$subject	=	"Confirm your email address";
+				$to = $email;
+				$name = $user;
+				$subject = "Confirm your email address";
 				
-				// Example of the confirmation link: http://localhost/rest/public/webresources/mobile_app/validate/testUser/326f0911657d94d0a48530058ca2a383
-				$html		=	"Click on the link to verify your email <a href='http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}' target='_blank'>Link</a>";
-				$text		=	"Go to the link to verify your email: http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}";
+				// Example of the confirmation link: http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/validate/testUser/326f0911657d94d0a48530058ca2a383
+				$html = "Click on the link to verify your email <a href='http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}' target='_blank'>Link</a>";
+				$text = "Go to the link to verify your email: http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}";
 
 				// Sent mail verification
-				Mailer::send($from, $to, $name, $subject, $html, $text);
+				Mailer::send($to, $name, $subject, $html, $text);
 			} else {
 				$data["status"] = "Error: Your account cannot be created at this time. Please try again later.";
 			}
@@ -208,7 +207,7 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 	});
 
 	/**
-	 * This method sets a user into the database.
+	 * This method validates an user into the database.
 	 *
 	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
 	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
@@ -274,6 +273,60 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 	});
 
 	/**
+	 * This method updates an user into the database.
+	 *
+	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
+	 * @param	\Psr\Http\Message\ResponseInterface      	$response	PSR7 response
+	 *
+	 * @return	\Psr\Http\Message\ResponseInterface
+	 */
+	$app->put("/update", function (Request $request, Response $response) {
+		/** @var string $country - Country ID */
+		$country = (int)$request->getParam("country");
+
+		/** @var string $token - Token */
+		$token = str_replace("Bearer ", "", $request->getServerParams()["HTTP_AUTHORIZATION"]);
+		// Verify the token.
+		$result = JWTAuth::verifyToken($token);
+		/** @var string $user - User ID */
+		$user = $result->header->id;
+
+		try {
+			// Gets the database connection
+			$conn = PDOConnection::getConnection();
+
+			// Gets the user into the database
+			$sql = "UPDATE	USERS
+					SET 	ID_COUNTRY = :country
+					WHERE	ID_USER = :user";
+			$stmt = $conn->prepare($sql);
+			$stmt->bindParam(":user", $user);
+			$stmt->bindParam(":country", $country);
+			$result = $stmt->execute();
+
+			// If user has been registered
+			if ($result) {
+				$data["status"] = "Your account has been successfully updated.";
+			} else {
+				$data["status"] = "Error: Your account cannot be updated at this time. Please try again later.";
+			}
+
+			$response = $response->withHeader("Content-Type", "application/json");
+			$response = $response->withStatus(200, "OK");
+			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			return $response;
+		} catch (PDOException $e) {
+			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
+		} catch (Exception $e) {
+			$this["logger"]->error("General Error: {$e->getMessage()}");
+		}
+		finally {
+			// Destroy the database connection
+			$conn = null;
+		}
+	});
+
+	/**
 	 * This method cheks the token.
 	 *
 	 * @param	\Psr\Http\Message\ServerRequestInterface	$request	PSR7 request
@@ -289,7 +342,13 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 		// Verify the token.
 		$result = JWTAuth::verifyToken($token);
 		// Return the result
-		$data["status"] = $result;
+		if ($result) {
+			$data["id_user"] = $result->header->id;
+			$data["username"] = $result->header->user;
+			$data["status"] = true;
+		} else {
+			$data["status"] = "Error: Authentication token is invalid.";
+		}
 		$response = $response->withHeader("Content-Type", "application/json");
 		$response = $response->withStatus(200, "OK");
 		$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));

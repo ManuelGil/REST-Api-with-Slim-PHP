@@ -7,7 +7,7 @@
 		<img src="https://img.shields.io/badge/stability-stable-green.svg" alt="Status">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/release-v1.0.0.6-blue.svg" alt="Version">
+		<img src="https://img.shields.io/badge/release-v1.0.0.7-blue.svg" alt="Version">
 	</a>
 	<a href="#changelog">
 		<img src="https://img.shields.io/badge/update-january-yellowgreen.svg" alt="Update">
@@ -241,6 +241,55 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 <a name="changelog"></a>
 ## Changelog
+
+**1.0.0.7** (01/24/2019)
+
+  * <table border="0" cellpadding="4">
+		<tr>
+			<td>
+				<strong>Language:</strong>
+			</td>
+			<td>
+				PHP
+			</td>
+		</tr>
+		<tr>
+			<td><strong>
+				Requirements:
+			</strong></td>
+			<td>
+				<ul>
+					<li>
+						PHP 5.6
+					</li>
+					<li>
+						MySQL or MariaDB 
+					</li>
+					<li>
+						Apache Server
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Changes:</strong>
+			</td>
+			<td>
+				<ul>
+					<li>
+						New update-user route
+					</li>
+					<li>
+						Update send mail function
+					</li>
+					<li>
+						Update verify Authentication Token function
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
 
 **1.0.0.6** (01/19/2019)
 

@@ -62,7 +62,7 @@ class JWTAuth
 			$exp = strtotime($obj->payload->exp);
 	  		// If token didn't expire
 			if (($exp - $now) > 0) {
-				return true;
+				return $obj;
 			}
 		}
 
