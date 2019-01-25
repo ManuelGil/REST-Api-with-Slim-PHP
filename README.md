@@ -319,7 +319,6 @@ Put the token on an HTTP header called Authorization. e.g.:
 
 <div align="center">
 	<img src="https://raw.githubusercontent.com/ManuelGil/REST-Api-with-Slim-PHP/master/docs/images/headers.gif" alt="headers">
-	<br/>
 </div>
 
 Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [https://jwt.io/](https://jwt.io/).
