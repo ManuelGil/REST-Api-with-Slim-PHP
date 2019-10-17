@@ -1,20 +1,41 @@
 {
     "name": "manuelgil/rest-api-with-slim-php",
     "description": "REST API with PHP Slim Framework 3 and MySQL",
+    "version": "1.0.0.8",
     "type": "project",
     "license": "MIT",
     "authors": [
         {
             "name": "Manuel Gil",
-            "email": "atencion.ms@outlook.com"
+            "email": "atencion.ms@outlook.com",
+            "role": "Developer"
         }
     ],
     "require": {
         "php": ">=5.6.4",
-        "slim/slim": "^3.9",
-        "monolog/monolog": "^1.23",
-        "vlucas/phpdotenv": "^2.5",
-        "tuupola/slim-jwt-auth": "^2.3",
-        "phpmailer/phpmailer": "^6.0"
+        "monolog/monolog": "^1.25",
+        "phpmailer/phpmailer": "^6.1",
+        "slim/http-cache": "^0.4.0",
+        "slim/slim": "^3.12",
+        "tuupola/slim-jwt-auth": "^2.4",
+        "vlucas/phpdotenv": "^2.6"
+    },
+    "support": {
+        "issues": "https://github.com/ManuelGil/REST-Api-with-Slim-PHP/issues",
+        "source": "https://github.com/ManuelGil/REST-Api-with-Slim-PHP"
+    },
+    "autoload": {
+        "files": [
+            "src/config/config.php"
+        ],
+        "classmap": [
+            "src/libs"
+        ]
+    },
+    "minimum-stability": "stable",
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "sort-packages": true
     }
 }

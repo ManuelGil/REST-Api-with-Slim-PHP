@@ -4,7 +4,7 @@ require '../vendor/autoload.php';
 
 $app = new \Slim\App;
 
-require '../src/autoload.php';
+require '../src/routes/api.php';
 
 $app->run();
 

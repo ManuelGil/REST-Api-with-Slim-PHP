@@ -7,10 +7,10 @@
 		<img src="https://img.shields.io/badge/stability-stable-green.svg" alt="Status">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/release-v1.0.0.7-blue.svg" alt="Version">
+		<img src="https://img.shields.io/badge/release-v1.0.0.8-blue.svg" alt="Version">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/update-january-yellowgreen.svg" alt="Update">
+		<img src="https://img.shields.io/badge/update-october-yellowgreen.svg" alt="Update">
 	</a>
 	<a href="#license">
 		<img src="https://img.shields.io/badge/license-MIT%20License-green.svg" alt="License">
@@ -37,6 +37,7 @@ This page will help you get started with this API.
   * PHP 5.6
   * MySQL or MariaDB
   * Apache Server
+  * Slim Framework v3
 
 <a name="installation"></a>
 ### Installation
@@ -220,6 +221,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
   Change the database configuration in the new file.
 
+<a name="Donate"></a>
+## :gift: Donate!
+
+If you want to help me to continue this project, you might donate via PayPal.
+
+<a href="https://paypal.me/ManuelFGil"><img src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_92x26.png" alt="Donate via PayPal"></a>
+
 <a name="deployment"></a>
 ## :package: Deployment
 
@@ -235,74 +243,133 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
   * `get` => `/ping` - This method is used for testing the api. e.g.:
 
-    > uri = `/public/webresources/mobile_app/ping`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/ping`
 
 
   * `get` => `/login/{user}/{password}` - This method gets a user into the database. e.g.:
 
-    > uri = `/public/webresources/mobile_app/login/testUser/testPwd`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/login/testUser/testPwd`
+
+```php
+      parameters = [
+        /** @var string $user - username */
+        string	$user	=>	"testUser",
+        /** @var string $password - password */
+        string	$password	=>	"testPwd"
+      ]
+```
 
 
   * `post` => `/register` - This method sets a user into the database. e.g.:
 
-    > uri = `/public/webresources/mobile_app/register`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/register`
 
-    > args = [user =>testUser, password => testPwd, email => example@example.com, country => 1]
+```php
+      parameters = [
+        /** @var string $user - username */
+        string	$user	=>	"testUser",
+        /** @var string $password - password */
+        string	$password	=>	"testPwd",
+        /** @var string $email - password */
+        string	$email	=>	"example@example.com",
+        /** @var int $country - country id */
+        int	$country	=>	1
+      ]
+```
 
 
   * `get` => `/validate/{user}/{token}` - This method verify the user account. e.g.:
 
-    > uri = `/public/webresources/mobile_app/validate/testUser/326f0911657d94d0a48530058ca2a383`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/validate/testUser/326f0911657d94d0a48530058ca2a383`
+
+```php
+      parameters = [
+        /** @var string $user - username */
+        string	$user	=>	"testUser",
+        /** @var string $token - token validation */
+        string	$token	=>	"326f0911657d94d0a48530058ca2a383"
+      ]
+```
 
 
   * `put` => `/update` - This method sets a user into the database. e.g.:
 
-    > uri = `/public/webresources/mobile_app/update`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/update`
 
-    > args = [country => 1]
+```php
+      parameters = [
+        /** @var int $country - country id */
+        int	$country	=>	1
+      ]
+```
 
 
   * `get` => `/verify` - This method checks the token. e.g.:
 
-    > uri = `/public/webresources/mobile_app/verify`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/verify`
+
+```php
+      headers = [
+        /** @var string $authorization - JWT Authentication */
+        string	$authorization	=>	"Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJoZWFkZXIiOnsiaWQiOjEsInVzZXIiOiJ0ZXN0VXNlciJ9LCJwYXlsb2FkIjp7ImlhdCI6IjIwMTktMDEtMDEgMDA6MDA6MDAiLCJleHAiOiIyMDIwLTAxLTAxIDAwOjAwOjAwIn19.RTTPlUqE--WMP9M28-oj7p8MhWdisuuhWBsioDa_bgY"
+      ]
+```
 
 
   * `post` => `/post` - This method publish short text messages of no more than 120 characters. e.g.:
 
-    > uri = `/public/webresources/mobile_app/post`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/post`
 
-    > args = [quote =>quote, id => userId]
+```php
+      parameters = [
+        /** @var string $quote - quote */
+        string	$quote	=>	"test",
+        /** @var int $id - user id */
+        int	$id	=>	1
+      ]
+```
 
 
   * `get` => `/list` - This method list the latest published messages. e.g.:
 
-    > uri = `/public/webresources/mobile_app/list`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/list`
 
 
   * `get` => `/likes/{id}` - get method - This method list the users for likes. e.g.:
 
-    > uri = `/public/webresources/mobile_app/likes/1`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/likes/1`
+
+```php
+      parameters = [
+        /** @var int $id - quote id */
+        int	$id	=>	1
+      ]
+```
 
 
   * `get` => `/search/{quote}` - get method - This method searches for messages by your text. e.g.:
 
-    > uri = `/public/webresources/mobile_app/search/Quote`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/search/quote`
+
+```php
+      parameters = [
+        /** @var string $quote - text search */
+        string	$quote	=>	"quote"
+      ]
+```
 
 
   * `delete` => `/delete` - delete method - This method deletes a specific message by its id. e.g.:
 
-    > uri = `/public/webresources/mobile_app/delete`
+    > uri = `http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/delete`
 
-    > args = [id => quoteId]
+```php
+      parameters = [
+        /** @var int $id - quote id */
+        int	$id	=>	1
+      ]
+```
 
-
-<a name="built"></a>
-## :wrench: Built With
-
-  * XAMPP for Windows 5.6.32 ([XAMPP](https://www.apachefriends.org/download.html))
-  * Visual Studio Code ([VSCode](https://code.visualstudio.com/))
-  * COMPOSER ([COMPOSER](https://getcomposer.org/))
-  * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
 
 <a name="test"></a>
 ## :100: Running the tests
@@ -317,18 +384,76 @@ Put the token on an HTTP header called Authorization. e.g.:
 
   * Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJoZWFkZXIiOnsiaWQiOjEsInVzZXIiOiJ0ZXN0VXNlciJ9LCJwYXlsb2FkIjp7ImlhdCI6IjIwMTktMDEtMDEgMDA6MDA6MDAiLCJleHAiOiIyMDIwLTAxLTAxIDAwOjAwOjAwIn19.RTTPlUqE--WMP9M28-oj7p8MhWdisuuhWBsioDa_bgY
 
+
 <div align="center">
 	<img src="https://raw.githubusercontent.com/ManuelGil/REST-Api-with-Slim-PHP/master/docs/images/headers.gif" alt="headers">
 </div>
 
+
 Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [https://jwt.io/](https://jwt.io/).
+
 
 <div align="center">
 	<img src="https://raw.githubusercontent.com/ManuelGil/REST-Api-with-Slim-PHP/master/docs/images/jwt.png" alt="jwt">
 </div>
 
+
+<a name="built"></a>
+## :wrench: Built With
+
+  * XAMPP for Windows 5.6.32 ([XAMPP](https://www.apachefriends.org/download.html))
+  * Visual Studio Code ([VSCode](https://code.visualstudio.com/))
+  * COMPOSER ([COMPOSER](https://getcomposer.org/))
+  * RestEasy Extension for Chrome ([RestEasy](https://chrome.google.com/webstore/detail/resteasy/nojelkgnnpdmhpankkiikipkmhgafoch))
+
 <a name="changelog"></a>
 ## :information_source: Changelog
+
+**1.0.0.8** (10/16/2019)
+
+  * <table border="0" cellpadding="4">
+		<tr>
+			<td>
+				<strong>Language:</strong>
+			</td>
+			<td>
+				PHP
+			</td>
+		</tr>
+		<tr>
+			<td><strong>
+				Requirements:
+			</strong></td>
+			<td>
+				<ul>
+					<li>
+						PHP 5.6
+					</li>
+					<li>
+						MySQL or MariaDB 
+					</li>
+					<li>
+						Apache Server
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Changes:</strong>
+			</td>
+			<td>
+				<ul>
+					<li>
+						Fix responses
+					</li>
+					<li>
+						Implements caches
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
 
 **1.0.0.7** (01/24/2019)
 
@@ -652,17 +777,10 @@ Checks if the `iat` (issued at) and `exp` (expiration time) are correct in [http
 		</tr>
 	</table>
 
-<a name="Donate"></a>
-## :gift: Donate!
-
-If you want to help me to continue this project, you might donate via PayPal.
-
-<a href="https://paypal.me/ManuelFGil"><img src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_92x26.png" alt="Donate via PayPal"></a>
-
 <a name="authors"></a>
 ## :eyeglasses: Authors
 
-  * **Manuel Gil** - *Initial work* - [ManuelGil](https://github.com/ManuelGil) 
+  * **Manuel Gil** - *Owner* - [ManuelGil](https://github.com/ManuelGil) 
 
 See also the list of [contributors](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/contributors)
  who participated in this project.

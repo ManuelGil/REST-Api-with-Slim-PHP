@@ -7,10 +7,10 @@
 		<img src="https://img.shields.io/badge/stability-stable-green.svg" alt="Status">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/release-v1.0.0.7-blue.svg" alt="Version">
+		<img src="https://img.shields.io/badge/release-v1.0.0.8-blue.svg" alt="Version">
 	</a>
 	<a href="#changelog">
-		<img src="https://img.shields.io/badge/update-january-yellowgreen.svg" alt="Update">
+		<img src="https://img.shields.io/badge/update-october-yellowgreen.svg" alt="Update">
 	</a>
 	<a href="#license">
 		<img src="https://img.shields.io/badge/license-MIT%20License-green.svg" alt="License">
@@ -220,6 +220,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
   Change the database configuration in the new file.
 
+<a name="Donate"></a>
+## :gift: Donate!
+
+If you want to help me to continue this project, you might donate via PayPal.
+
+<a href="https://paypal.me/ManuelFGil"><img src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_92x26.png" alt="Donate via PayPal"></a>
+
 <a name="deployment"></a>
 ## Deployment
 
@@ -241,6 +248,52 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 <a name="changelog"></a>
 ## Changelog
+
+**1.0.0.8** (10/16/2019)
+
+  * <table border="0" cellpadding="4">
+		<tr>
+			<td>
+				<strong>Language:</strong>
+			</td>
+			<td>
+				PHP
+			</td>
+		</tr>
+		<tr>
+			<td><strong>
+				Requirements:
+			</strong></td>
+			<td>
+				<ul>
+					<li>
+						PHP 5.6
+					</li>
+					<li>
+						MySQL or MariaDB 
+					</li>
+					<li>
+						Apache Server
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Changes:</strong>
+			</td>
+			<td>
+				<ul>
+					<li>
+						Fix Responses
+					</li>
+					<li>
+						Implements caches
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
 
 **1.0.0.7** (01/24/2019)
 
@@ -564,17 +617,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 		</tr>
 	</table>
 
-<a name="Donate"></a>
-## Donate!
-
-If you want to help me to continue this project, you might donate via PayPal.
-
-<a href="https://paypal.me/ManuelFGil"><img src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_92x26.png" alt="Donate via PayPal"></a>
-
 <a name="authors"></a>
 ## Authors
 
-  * **Manuel Gil** - *Initial work* - [ManuelGil](https://github.com/ManuelGil) 
+  * **Manuel Gil** - *Owner* - [ManuelGil](https://github.com/ManuelGil) 
 
 See also the list of [contributors](https://github.com/ManuelGil/REST-Api-with-Slim-PHP/contributors)
  who participated in this project.

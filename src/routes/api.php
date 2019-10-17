@@ -9,6 +9,10 @@ use Monolog\Handler\StreamHandler;
 
 $container = $app->getContainer();
 
+$container['cache'] = function () {
+	return new \Slim\HttpCache\CacheProvider();
+};
+
 $container["logger"] = function ($c) {
 	// create a log channel
 	$log = new Logger("api");
@@ -16,6 +20,8 @@ $container["logger"] = function ($c) {
 
 	return $log;
 };
+
+$app->add(new \Slim\HttpCache\Cache('private', 300, true));
 
 /**
  * This method restricts access to addresses. <br/>
@@ -118,16 +124,15 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			}
 
 			// Return the result
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(201, "Created");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(201, "Created")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
@@ -155,7 +160,7 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 		/** @var string $created - Date of created */
 		$created = date("Y-m-d");
 		/** @var string $country - Country ID */
-		$country = (int)$request->getParam("country");
+		$country = (int) $request->getParam("country");
 
 		try {
 			// Gets the database connection
@@ -180,7 +185,7 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 				$to = $email;
 				$name = $user;
 				$subject = "Confirm your email address";
-				
+
 				// Example of the confirmation link: http://localhost/REST-Api-with-Slim-PHP/public/webresources/mobile_app/validate/testUser/326f0911657d94d0a48530058ca2a383
 				$html = "Click on the link to verify your email <a href='http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}' target='_blank'>Link</a>";
 				$text = "Go to the link to verify your email: http://{yourdomain}/public/webresources/mobile_app/validate/{$user}/{$token}";
@@ -191,16 +196,15 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 				$data["status"] = "Error: Your account cannot be created at this time. Please try again later.";
 			}
 
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(200, "OK");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(200, "OK")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
@@ -254,19 +258,17 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			} else {
 				// Username wrong
 				$data["status"] = "Error: The user specified does not exist.";
-
 			}
 
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(200, "OK");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(200, "OK")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
@@ -282,7 +284,7 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 	 */
 	$app->put("/update", function (Request $request, Response $response) {
 		/** @var string $country - Country ID */
-		$country = (int)$request->getParam("country");
+		$country = (int) $request->getParam("country");
 
 		/** @var string $token - Token */
 		$token = str_replace("Bearer ", "", $request->getServerParams()["HTTP_AUTHORIZATION"]);
@@ -311,16 +313,15 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 				$data["status"] = "Error: Your account cannot be updated at this time. Please try again later.";
 			}
 
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(200, "OK");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(200, "OK")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
@@ -349,9 +350,9 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 		} else {
 			$data["status"] = "Error: Authentication token is invalid.";
 		}
-		$response = $response->withHeader("Content-Type", "application/json");
-		$response = $response->withStatus(200, "OK");
-		$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+		$response = $response->withHeader("Content-Type", "application/json")
+			->withStatus(200, "OK")
+			->withJson($data);
 		return $response;
 	});
 
@@ -402,18 +403,17 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 				// Username wrong
 				$data["status"] = "Error: The user specified does not exist.";
 			}
-		
+
 			// Return the result
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(200, "OK");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(200, "OK")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
@@ -446,16 +446,15 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$data = $stmt->fetchAll();
 
 			// Return a list
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(200, "OK");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(200, "OK")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
@@ -490,16 +489,15 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$data = $stmt->fetchAll();
 
 			// Return a list
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(200, "OK");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(200, "OK")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
@@ -538,16 +536,15 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			$data = $stmt->fetchAll();
 
 			// Return the result
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(200, "OK");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(200, "OK")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
@@ -579,21 +576,17 @@ $app->group("/webresources/mobile_app", function () use ($app) {
 			// Return the result
 			$data["status"] = $result;
 
-			$response = $response->withHeader("Content-Type", "application/json");
-			$response = $response->withStatus(200, "OK");
-			$response = $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+			$response = $response->withHeader("Content-Type", "application/json")
+				->withStatus(200, "OK")
+				->withJson($data);
 			return $response;
 		} catch (PDOException $e) {
 			$this["logger"]->error("DataBase Error: {$e->getMessage()}");
 		} catch (Exception $e) {
 			$this["logger"]->error("General Error: {$e->getMessage()}");
-		}
-		finally {
+		} finally {
 			// Destroy the database connection
 			$conn = null;
 		}
 	});
-
 });
-
-?>
